@@ -1,7 +1,7 @@
 package processors
 
 import (
-	"fmt"
+	//"fmt"
 	"github.com/cx-rotems/StreamResults/manager"
 	"github.com/cx-rotems/StreamResults/types"
 	"time"
@@ -21,7 +21,7 @@ func (re *ResultEnrichment) Start() {
 	defer re.jobManager.WorkerDone()
 
 	for result := range re.enrichmentChan {
-		fmt.Printf("ResultEnrichment: Enriching result for result ID %d and job ID  %d\n", result.ResultID, result.JobID) // simulate result enrichment
+	//	fmt.Printf("ResultEnrichment: Enriching result for result ID %d and job ID  %d\n", result.ResultID, result.JobID) // simulate result enrichment
 		time.Sleep(60 * time.Millisecond)
 		re.loaderChan <- result
 	}

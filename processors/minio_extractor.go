@@ -1,7 +1,7 @@
 package processors
 
 import (
-	"fmt"
+	//"fmt"
 	"github.com/cx-rotems/StreamResults/manager"
 	"github.com/cx-rotems/StreamResults/types"
 	"time"
@@ -21,8 +21,8 @@ func (me *MinioExtractor) Start() {
 	defer me.jobManager.WorkerDone()
 
 	for job := range me.minioChan {
-		fmt.Printf("MinioExtractor: Extracting data for job ID %d\n", job.ID)
-		for i := 1; i < 10; i++ {
+	//	fmt.Printf("MinioExtractor: Extracting data for job ID %d\n", job.ID)
+		for i := 1; i < 250; i++ {
 			time.Sleep(100 * time.Millisecond) // simulate download from Minio
 			me.resultChan <- types.Result{ResultID: i, JobID: job.ID}
 		}

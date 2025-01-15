@@ -1,7 +1,7 @@
 package processors
 
 import (
-	"fmt"
+	//"fmt"
 	"github.com/cx-rotems/StreamResults/manager"
 	"github.com/cx-rotems/StreamResults/types"
 	"time"
@@ -22,7 +22,7 @@ func (jr *JobReceiver) Start() {
 	defer jr.jobManager.WorkerDone()
 
 	for job := range jr.jobChan {
-		fmt.Printf("JobReceiver: Processing job ID %d\n", job.ID)
+		//fmt.Printf("JobReceiver: Processing job ID %d\n", job.ID)
 		time.Sleep(50 * time.Millisecond)
 		jr.minioChan <- job
 	}
