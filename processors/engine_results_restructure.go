@@ -22,8 +22,8 @@ func (er *EngineResultsRestructure) Start() {
 
 	for result := range er.resultChan {
 		result.CvssScores = fmt.Sprintf("%d", result.ResultID*10)
+		time.Sleep(70 * time.Millisecond) // simulate restructure
 		fmt.Printf("EngineResultsRestructure: Restructuring result for result ID %d and job ID  %d\n", result.ResultID, result.JobID)
-		time.Sleep(70 * time.Millisecond)
 		er.enrichmentChan <- result
 	}
 	close(er.enrichmentChan)

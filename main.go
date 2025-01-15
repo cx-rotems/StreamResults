@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-
+	"time"
 	"github.com/cx-rotems/StreamResults/manager"
 	"github.com/cx-rotems/StreamResults/processors"
 	"github.com/cx-rotems/StreamResults/types"
@@ -31,10 +31,12 @@ func main() {
 		jobManager.AddWorker()
 		go process.Start()
 	}
+	
+	startTime := time.Now()
 
 	// Send jobs in a separate goroutine
 	go func() {
-		for i := 1; i <= 2; i++ {
+		for i := 1; i <= 3; i++ {
 			jobChan <- types.Job{ID: i}
 		}
 		close(jobChan)
@@ -43,4 +45,8 @@ func main() {
 	// Wait for completion
 	jobManager.WaitForCompletion()
 	fmt.Println("All jobs completed")
+
+	// Calculate and print the total time taken
+	elapsedTime := time.Since(startTime)
+	fmt.Printf("Total time taken: %v\n", elapsedTime)
 }

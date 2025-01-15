@@ -8,6 +8,8 @@ import (
 	"github.com/cx-rotems/StreamResults/types"
 )
 
+const transactionSize = 4
+
 type ResultLoader struct {
 	loaderChan chan types.Result
 	jobManager *manager.JobManager
@@ -20,31 +22,29 @@ func NewResultLoader(loaderChan chan types.Result, jm *manager.JobManager) *Resu
 func (rl *ResultLoader) Start() {
 	defer rl.jobManager.WorkerDone()
 
-	batch := make([]types.Result, 0, 4) // Pre-allocate slice with capacity of 4
+	transaction := make([]types.Result, 0, transactionSize)
 
 	for result := range rl.loaderChan {
-		batch = append(batch, result)
+		transaction = append(transaction, result)
 
-		// Process batch when it reaches size 4 or when the channel is closed
-		if len(batch) == 4 {
-			processBatch(batch)
-			batch = batch[:0] // Clear the batch while keeping capacity
+		if len(transaction) == transactionSize {
+			processTransaction(transaction)
+			transaction = transaction[:0]
 		}
 	}
 
-	// Process any remaining results
-	if len(batch) > 0 {
-		processBatch(batch)
+	if len(transaction) > 0 {
+		processTransaction(transaction)
 	}
 }
 
-var batchCounter int
+var transactionCounter int
 
-func processBatch(batch []types.Result) {
-	batchCounter++
-	fmt.Printf("\nResultLoader: Saving batch #%d (%d results)\n", batchCounter, len(batch))
-	fmt.Println("Results in this batch:")
-	for i, result := range batch {
+func processTransaction(transaction []types.Result) {
+	transactionCounter++
+	fmt.Printf("\nResultLoader: Saving transaction #%d (%d results)\n", transactionCounter, len(transaction))
+	fmt.Println("Results in this transaction:")
+	for i, result := range transaction {
 		fmt.Printf("  [%d] Result ID: %d, Job ID: %d\n",
 			i+1, result.ResultID, result.JobID)
 	}
