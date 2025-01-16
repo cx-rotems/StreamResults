@@ -7,6 +7,7 @@ import (
 	"syscall"
 	"github.com/cx-rotems/StreamResults/processors"
 	"github.com/cx-rotems/StreamResults/types"
+	"time"
 )
 
 const bufferSize = 1000
@@ -19,8 +20,14 @@ func main() {
 	enrichmentChan := make(chan types.Result, bufferSize)
 	loaderChan := make(chan types.Result, bufferSize)
 
+	var start time.Time
+
 	jobCompleted := func(jobID int) {
         fmt.Printf("Job %d completed\n", jobID)
+		if jobID == 3 {
+			elapsed := time.Since(start)
+			fmt.Printf("Total time took %s\n", elapsed)
+		}
     }
 
 
@@ -39,6 +46,7 @@ func main() {
 	
 
 	go func() {
+		start = time.Now()
 		for i := 1; i <= 3; i++ {
 			jobChan <- types.Job{ID: i}
 		}
