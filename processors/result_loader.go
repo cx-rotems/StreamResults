@@ -3,7 +3,6 @@ package processors
 import (
 	"fmt"
 	"time"
-	"github.com/cx-rotems/StreamResults/manager"
 	"github.com/cx-rotems/StreamResults/types"
 )
 
@@ -11,11 +10,11 @@ const transactionSize = 4
 
 type ResultLoader struct {
 	loaderChan chan types.Result
-	jobManager *manager.JobManager
+	callback   func(int)
 }
 
-func NewResultLoader(loaderChan chan types.Result, jm *manager.JobManager) *ResultLoader {
-	return &ResultLoader{loaderChan: loaderChan, jobManager: jm}
+func NewResultLoader(loaderChan chan types.Result, callback func(int)) *ResultLoader {
+	return &ResultLoader{loaderChan: loaderChan, callback: callback}
 }
 
 func (rl *ResultLoader) Start() {
@@ -35,7 +34,7 @@ func (rl *ResultLoader) Start() {
         if len(transaction) > 0 {
             processTransaction(transaction)
         }
-        rl.jobManager.JobCompleted(jobID)
+        rl.callback(jobID)
     }
 }
 
