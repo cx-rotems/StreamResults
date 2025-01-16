@@ -22,10 +22,10 @@ func main() {
 	jobManager := manager.NewJobManager()
 
 	processes := []processors.ETLProcess{
-		processors.NewJobReceiver(jobChan, minioChan, jobManager),
-		processors.NewMinioExtractor(minioChan, resultChan, jobManager),
-		processors.NewEngineResultsRestructure(resultChan, enrichmentChan, jobManager),
-		processors.NewResultEnrichment(enrichmentChan, loaderChan, jobManager),
+		processors.NewJobReceiver(jobChan, minioChan),
+		processors.NewMinioExtractor(minioChan, resultChan),
+		processors.NewEngineResultsRestructure(resultChan, enrichmentChan),
+		processors.NewResultEnrichment(enrichmentChan, loaderChan),
 		processors.NewResultLoader(loaderChan, jobManager),
 	}
 
@@ -37,7 +37,6 @@ func main() {
 
 	go func() {
 		for i := 1; i <= 3; i++ {
-			jobManager.AddJob(i)
 			jobChan <- types.Job{ID: i}
 		}
 		close(jobChan)

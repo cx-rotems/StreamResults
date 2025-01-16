@@ -3,7 +3,6 @@ package processors
 import (
 	"fmt"
 	"time"
-
 	"github.com/cx-rotems/StreamResults/manager"
 	"github.com/cx-rotems/StreamResults/types"
 )

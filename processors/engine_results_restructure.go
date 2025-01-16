@@ -2,7 +2,6 @@ package processors
 
 import (
 	"fmt"
-	"github.com/cx-rotems/StreamResults/manager"
 	"github.com/cx-rotems/StreamResults/types"
 	"time"
 )
@@ -10,11 +9,10 @@ import (
 type EngineResultsRestructure struct {
 	resultChan     chan types.Result
 	enrichmentChan chan types.Result
-	jobManager     *manager.JobManager
 }
 
-func NewEngineResultsRestructure(resultChan, enrichmentChan chan types.Result, jm *manager.JobManager) *EngineResultsRestructure {
-	return &EngineResultsRestructure{resultChan: resultChan, enrichmentChan: enrichmentChan, jobManager: jm}
+func NewEngineResultsRestructure(resultChan, enrichmentChan chan types.Result) *EngineResultsRestructure {
+	return &EngineResultsRestructure{resultChan: resultChan, enrichmentChan: enrichmentChan}
 }
 
 func (er *EngineResultsRestructure) Start() {

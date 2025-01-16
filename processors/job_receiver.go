@@ -2,7 +2,6 @@ package processors
 
 import (
 	//"fmt"
-	"github.com/cx-rotems/StreamResults/manager"
 	"github.com/cx-rotems/StreamResults/types"
 	"time"
 )
@@ -11,11 +10,10 @@ import (
 type JobReceiver struct {
 	jobChan    chan types.Job
 	minioChan  chan types.Job
-	jobManager *manager.JobManager
 }
 
-func NewJobReceiver(jobChan, minioChan chan types.Job, jm *manager.JobManager) *JobReceiver {
-	return &JobReceiver{jobChan: jobChan, minioChan: minioChan, jobManager: jm}
+func NewJobReceiver(jobChan, minioChan chan types.Job) *JobReceiver {
+	return &JobReceiver{jobChan: jobChan, minioChan: minioChan}
 }
 
 func (jr *JobReceiver) Start() {
