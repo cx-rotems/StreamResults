@@ -9,13 +9,15 @@ import (
 	"github.com/cx-rotems/StreamResults/types"
 )
 
+const bufferSize = 1000
+
 func main() {
 	// Create channels with buffer size to prevent potential deadlocks
-	jobChan := make(chan types.Job, 5)
-	minioChan := make(chan types.Job, 5)
-	resultChan := make(chan types.Result, 5)
-	enrichmentChan := make(chan types.Result, 5)
-	loaderChan := make(chan types.Result, 5)
+	jobChan := make(chan types.Job, bufferSize)
+	minioChan := make(chan types.Job, bufferSize)
+	resultChan := make(chan types.Result, bufferSize)
+	enrichmentChan := make(chan types.Result, bufferSize)
+	loaderChan := make(chan types.Result, bufferSize)
 
 	jobManager := manager.NewJobManager()
 
