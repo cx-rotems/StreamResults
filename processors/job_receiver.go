@@ -19,12 +19,11 @@ func NewJobReceiver(jobChan, minioChan chan types.Job, jm *manager.JobManager) *
 }
 
 func (jr *JobReceiver) Start() {
-	defer jr.jobManager.WorkerDone()
+	defer close(jr.minioChan)
 
 	for job := range jr.jobChan {
 		//fmt.Printf("JobReceiver: Processing job ID %d\n", job.ID)
 		time.Sleep(50 * time.Millisecond)
 		jr.minioChan <- job
 	}
-	close(jr.minioChan)
 }

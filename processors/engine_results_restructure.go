@@ -18,7 +18,7 @@ func NewEngineResultsRestructure(resultChan, enrichmentChan chan types.Result, j
 }
 
 func (er *EngineResultsRestructure) Start() {
-	defer er.jobManager.WorkerDone()
+	defer close(er.enrichmentChan)
 
 	for result := range er.resultChan {
 		result.CvssScores = fmt.Sprintf("%d", result.ResultID*10)
@@ -26,5 +26,4 @@ func (er *EngineResultsRestructure) Start() {
 		//fmt.Printf("EngineResultsRestructure: Restructuring result for result ID %d and job ID  %d\n", result.ResultID, result.JobID)
 		er.enrichmentChan <- result
 	}
-	close(er.enrichmentChan)
 }

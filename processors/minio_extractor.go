@@ -18,15 +18,14 @@ func NewMinioExtractor(minioChan chan types.Job, resultChan chan types.Result, j
 }
 
 func (me *MinioExtractor) Start() {
-	defer me.jobManager.WorkerDone()
+	defer close(me.resultChan)
 
 	for job := range me.minioChan {
 	//	fmt.Printf("MinioExtractor: Extracting data for job ID %d\n", job.ID)
-		for i := 1; i < 250; i++ {
+		for i := 1; i < 100; i++ {
 			time.Sleep(100 * time.Millisecond) // simulate download from Minio
 			me.resultChan <- types.Result{ResultID: i, JobID: job.ID}
 		}
 		
 	}
-	close(me.resultChan)
 }

@@ -1,28 +1,24 @@
 package manager
 
-import "sync"
+import (
+    "fmt"
+)
 
 // JobManager coordinates and tracks the completion of ETL processes
 type JobManager struct {
-	wg       sync.WaitGroup
-	doneChan chan struct{}
+	completionChan chan int
 }
 
 func NewJobManager() *JobManager {
 	return &JobManager{
-		doneChan: make(chan struct{}),
+		completionChan: make(chan int, 100), // Buffer size to prevent blocking
 	}
 }
 
-func (jm *JobManager) AddWorker() {
-	jm.wg.Add(1)
+func (jm *JobManager) JobCompleted(jobID int) {
+	fmt.Printf("Job %d completed\n", jobID)
 }
 
-func (jm *JobManager) WorkerDone() {
-	jm.wg.Done()
-}
-
-func (jm *JobManager) WaitForCompletion() {
-	jm.wg.Wait()
-	close(jm.doneChan)
+func (jm *JobManager) AddJob(jobID int) {
+	fmt.Printf("Starting job %d\n", jobID)
 }

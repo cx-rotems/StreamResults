@@ -20,22 +20,24 @@ func NewResultLoader(loaderChan chan types.Result, jm *manager.JobManager) *Resu
 }
 
 func (rl *ResultLoader) Start() {
-	defer rl.jobManager.WorkerDone()
+    transactions := make(map[int][]types.Result)
 
-	transaction := make([]types.Result, 0, transactionSize)
+    for result := range rl.loaderChan {
+        jobID := result.JobID
+        transactions[jobID] = append(transactions[jobID], result)
 
-	for result := range rl.loaderChan {
-		transaction = append(transaction, result)
+        if len(transactions[jobID]) == transactionSize {
+            processTransaction(transactions[jobID])
+            transactions[jobID] = transactions[jobID][:0]
+        }
+    }
 
-		if len(transaction) == transactionSize {
-			processTransaction(transaction)
-			transaction = transaction[:0]
-		}
-	}
-
-	if len(transaction) > 0 {
-		processTransaction(transaction)
-	}
+    for jobID, transaction := range transactions {
+        if len(transaction) > 0 {
+            processTransaction(transaction)
+        }
+        rl.jobManager.JobCompleted(jobID)
+    }
 }
 
 var transactionCounter int
